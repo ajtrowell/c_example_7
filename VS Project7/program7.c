@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 /*
 Paul Ruth
 program 7
@@ -31,28 +32,27 @@ float a[4][50]={0};
 do
 {
 
-menuOpt = menu();
+	menuOpt = tolower(menu());
 
     switch (menuOpt)
     {
-    case 'A': case 'a': // Add
-        employeeIndex = (possible(a,4));
-            if (employeeIndex <50)
-                {
-                    add(a,4,employeeIndex);
-                for (i=0;i<4;i++)
+		case 'a': // Add
+			employeeIndex = (possible(a,4));
+			if (employeeIndex <50)
+			{	
+				add(a,4,employeeIndex);
+				for (i=0;i<4;i++)
 				{
 					for (j = 0; j < 50; j++) {
 						printf("%2.2f  ", a[i][j]);
 					}
-						printf("\n\n");
+					printf("\n\n");
 				}
-                }else
-                printf("No more employees can be entered");
-
-        break;
-
-        case 'D': case 'd': // Display
+			} else {
+				printf("No more employees can be entered");
+			}
+			break;
+		case 'd': // Display
             printf("Please enter employee number:");
             scanf("%d", &mouse);
 
@@ -60,7 +60,6 @@ menuOpt = menu();
 
                 if (mouse != 1000)
                     {
-
                         printf("Employee number                        : %.2f\n",a[0][mouse]);
                         printf("Hours worked                           : %.2f\n",a[1][mouse]);
                         printf("Employee pay rate                      : %.2f\n",a[2][mouse]);
@@ -71,16 +70,16 @@ menuOpt = menu();
                         printf("No such employee");
 
         break;
-        case 'T': case 't':
+        case 't':
             printf("the total payroll is %.2f\n", paycheck(a,4,mouse));
         break;
-        case 'S': case 's':
+        case 's':
             record(a,4,mouse);
         break;
-        case 'C': case 'c':
+        case 'c':
             Numemployees(a,4);
         break;
-        case 'F': case 'f':
+        case 'f':
               printf("Please enter employee to delete:");
               scanf("%d",&employeeNumber);
               printf("Employee Number: %d",employeeNumber);
@@ -96,7 +95,7 @@ menuOpt = menu();
             }
         break;
 
-        case 'Z': case 'z':
+        case 'z':
             printf("Better cut those checks have a nice day!");
             exitCmd = 0;
         break;
