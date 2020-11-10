@@ -16,6 +16,7 @@ void Delete (float cat[][50],int n, int x);
 float paycheck (float cat[][50],int n, int mouse);
 void record (float cat[][50],int n, int mouse);
 char menu (void);
+void printfp(char text[], int padLength);
 
 int main (void)
 {
@@ -33,23 +34,24 @@ menuOpt = menu();
 
     switch (menuOpt)
     {
-    case 'A': case 'a':
-        mouse = (possible(a,4));
-            if (mouse <50)
+    case 'A': case 'a': // Add
+        employeeIndex = (possible(a,4));
+            if (employeeIndex <50)
                 {
-                    add(a,4,mouse);
+                    add(a,4,employeeIndex);
                 for (i=0;i<4;i++)
-                    {
-                        for (j=0; j<50; j++)
-                            printf("%2.2f  ", a[i][j]);
-                            printf("\n\n");
-                    }
+				{
+					for (j = 0; j < 50; j++) {
+						printf("%2.2f  ", a[i][j]);
+					}
+						printf("\n\n");
+				}
                 }else
                 printf("No more employees can be entered");
 
         break;
 
-        case 'D': case 'd':
+        case 'D': case 'd': // Display
             printf("Please enter employee number:");
             scanf("%d", &mouse);
 
@@ -67,23 +69,15 @@ menuOpt = menu();
                     }else
                         printf("No such employee");
 
-
         break;
-
-
         case 'T': case 't':
             printf("the total payroll is %.2f\n", paycheck(a,4,mouse));
-
         break;
-
         case 'S': case 's':
             record(a,4,mouse);
-
         break;
-
         case 'C': case 'c':
             Numemployees(a,4);
-
         break;
         case 'F': case 'f':
               printf("Please enter employee to delete:");
@@ -113,8 +107,6 @@ menuOpt = menu();
                     printf("\n\n");
             }
             break;
-
-
     default:
         printf("Please enter valid selection\n");
         }
@@ -234,6 +226,18 @@ int j=0;
                     printf("Pay check amount                       : %.2f\n",cat[1][j]*cat[2][j]-cat[1][j]*cat[2][j]*(cat[3][j])/100);
                     printf("-------------------------------------------------\n");
         }
+
+}
+//http://www.cplusplus.com/reference/cstdio/sscanf/
+//https://stackoverflow.com/questions/10820377/c-format-char-array-like-printf
+void printfp(char text[], int padLength) {
+	printf(text);
+	int len = strlen(text);
+	while (len < padLength) {
+		printf(" ");
+		len++;
+	}
+	printf("string length:  %d", len);
 
 }
 
