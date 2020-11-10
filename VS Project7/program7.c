@@ -16,6 +16,7 @@ void Delete (float cat[][50],int n, int x);
 float paycheck (float cat[][50],int n, int mouse);
 void record (float cat[][50],int n, int mouse);
 char menu (void);
+void populate(float a[][50]);
 void printfp(char text[], int padLength);
 
 int main (void)
@@ -102,11 +103,15 @@ menuOpt = menu();
         case '1':
             for (i = 0; i < 4; i++)
             {
-                for (j = 0; j < 50; j++)
-                    printf("%d",a[i][j]);
+				for (j = 0; j < 50; j++) {
+					printf("%6.2f  ",a[i][j]);
+				}
                     printf("\n\n");
             }
             break;
+		case 'q':
+			populate(a);
+		break;
     default:
         printf("Please enter valid selection\n");
         }
@@ -211,6 +216,9 @@ for(j=0; j<50; j++)
             }
     return sum;
 }
+// Show all records
+// cat is input array
+// n and mouse do nothing
 void record (float cat[][50],int n, int mouse)
 {
 int j=0;
@@ -218,13 +226,13 @@ int j=0;
         {
             if((int)cat[0][j] == 0)
                 break;
-                    printf("Employee number                        : %.2f\n",cat[0][j]);
-                    printf("Hours worked                           : %.2f\n",cat[1][j]);
-                    printf("Employee pay rate                      : %.2f\n",cat[2][j]);
-                    printf("Total earned                           : %.2f\n",cat[1][j]*cat[2][j]);
-                    printf("Tax deduction of %.2f%% for a total of  : %.2f\n",cat[3][j],cat[1][j]*cat[2][j]*(cat[3][j])/100);
-                    printf("Pay check amount                       : %.2f\n",cat[1][j]*cat[2][j]-cat[1][j]*cat[2][j]*(cat[3][j])/100);
-                    printf("-------------------------------------------------\n");
+                    printf("Employee number                          : %8.0f\n",cat[0][j]);
+                    printf("Hours worked                             : %8.2f\n",cat[1][j]);
+                    printf("Employee pay rate                        : %8.2f\n",cat[2][j]);
+                    printf("Total earned                             : %8.2f\n",cat[1][j]*cat[2][j]);
+                    printf("Tax deduction of %6.2f%% for a total of  : %8.2f\n",cat[3][j],cat[1][j]*cat[2][j]*(cat[3][j])/100);
+                    printf("Pay check amount                         : %8.2f\n",cat[1][j]*cat[2][j]-cat[1][j]*cat[2][j]*(cat[3][j])/100);
+                    printf("---------------------------------------------------\n");
         }
 
 }
@@ -240,6 +248,16 @@ void printfp(char text[], int padLength) {
 	printf("string length:  %d", len);
 
 }
+
+void populate(float a[][50]) {
+	for (int i = 0; i < 50; i++) {
+		a[0][i] = i + 1; // Employee number
+		a[1][i] = 30.0 + i/2.0; // Employee hours worked
+		a[2][i] = 8.0 + i; // Employee hourly wage
+		a[3][i] = a[2][i]*(0.04 + (float) i / 100.0); // Employee tax deduction
+	}
+}
+
 
 
 
