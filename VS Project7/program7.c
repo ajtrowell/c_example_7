@@ -32,43 +32,42 @@ float a[4][50]={0};
 do
 {
 
-	menuOpt = tolower(menu());
+    menuOpt = tolower(menu());
 
     switch (menuOpt)
     {
-		case 'a': // Add
-			employeeIndex = (possible(a,4));
-			if (employeeIndex <50)
-			{	
-				add(a,4,employeeIndex);
-				for (i=0;i<4;i++)
-				{
-					for (j = 0; j < 50; j++) {
-						printf("%2.2f  ", a[i][j]);
-					}
-					printf("\n\n");
-				}
-			} else {
-				printf("No more employees can be entered");
-			}
-			break;
-		case 'd': // Display
+        case 'a': // Add
+            employeeIndex = (possible(a,4));
+            if (employeeIndex <50)
+            {	
+                add(a,4,employeeIndex);
+                for (i=0;i<4;i++)
+                {
+                    for (j = 0; j < 50; j++) {
+                        printf("%2.2f  ", a[i][j]);
+                    }
+                    printf("\n\n");
+                }
+            } else {
+                printf("No more employees can be entered");
+            }
+            break;
+        case 'd': // Display
             printf("Please enter employee number:");
             scanf("%d", &mouse);
 
             mouse = search(a,4,mouse);
 
-                if (mouse != 1000)
-                    {
-                        printf("Employee number                        : %.2f\n",a[0][mouse]);
-                        printf("Hours worked                           : %.2f\n",a[1][mouse]);
-                        printf("Employee pay rate                      : %.2f\n",a[2][mouse]);
-                        printf("Total earned                           : %.2f\n",a[1][mouse]*a[2][mouse]);
-                        printf("Tax deduction of %.2f%% for a total of : %.2f\n",a[3][mouse],a[1][mouse]*a[2][mouse]*(a[3][mouse])/100);
-                        printf("Pay check amount                      : %.2f\n",a[1][mouse]*a[2][mouse]-a[1][mouse]*a[2][mouse]*(a[3][mouse])/100);
-                    }else
-                        printf("No such employee");
-
+            if (mouse != 1000)
+            {
+                printf("Employee number                        : %.2f\n",a[0][mouse]);
+                printf("Hours worked                           : %.2f\n",a[1][mouse]);
+                printf("Employee pay rate                      : %.2f\n",a[2][mouse]);
+                printf("Total earned                           : %.2f\n",a[1][mouse]*a[2][mouse]);
+                printf("Tax deduction of %.2f%% for a total of : %.2f\n",a[3][mouse],a[1][mouse]*a[2][mouse]*(a[3][mouse])/100);
+                printf("Pay check amount                      : %.2f\n",a[1][mouse]*a[2][mouse]-a[1][mouse]*a[2][mouse]*(a[3][mouse])/100);
+            }else
+                printf("No such employee");
         break;
         case 't':
             printf("the total payroll is %.2f\n", paycheck(a,4,mouse));
@@ -80,18 +79,16 @@ do
             Numemployees(a,4);
         break;
         case 'f':
-              printf("Please enter employee to delete:");
-              scanf("%d",&employeeNumber);
-              printf("Employee Number: %d",employeeNumber);
-              employeeIndex = search(a,4,employeeNumber);
-              printf("Employee Index: %d",employeeIndex);
+            printf("Please enter employee to delete:");
+            scanf("%d",&employeeNumber);
+            employeeIndex = search(a,4,employeeNumber);
 
             if (employeeIndex < 50)
             {
-           //     Delete(a,4,employeeIndex);
+                Delete(a,4,employeeIndex);
             }else
             {
-            printf("No such employee.");
+                printf("No such employee.");
             }
         break;
 
@@ -102,15 +99,15 @@ do
         case '1':
             for (i = 0; i < 4; i++)
             {
-				for (j = 0; j < 50; j++) {
-					printf("%6.2f  ",a[i][j]);
-				}
+                for (j = 0; j < 50; j++) {
+                    printf("%6.2f  ",a[i][j]);
+                }
                     printf("\n\n");
             }
             break;
-		case 'q':
-			populate(a);
-		break;
+        case 'q': // Hidden option, fill in the employee table
+            populate(a);
+        break;
     default:
         printf("Please enter valid selection\n");
         }
@@ -142,10 +139,9 @@ int j=0;
     for (j = 0; j < 50; j++)
         if ((int)cat[0][j] == 0)
             break;
-
     return j;
-
 }
+
 void add(float cat[][50], int n, int m)
 
 {
@@ -180,30 +176,37 @@ int j=0;
 }
 int Numemployees (float cat[][50], int n)
 {
-int j=0, k=0;
-                for(j=0; j<50; j++)
-                {
-                if (cat[0][j] == 0)
-                break;
-                    k++;
-                }
-                printf("The number of employees is: %d\n", k);
+    int j=0, k=0;
+    for(j=0; j<50; j++)
+    {
+        if (cat[0][j] == 0)
+            break;
+        else
+            k++;
+    }
+    printf("The number of employees is: %d\n", k);
 }
+
+// Erase 
 void wipe (float cat[][50], int n)
 {
-
+    for (int iRow = 0; iRow < 4; iRow++) {
+        for (int iEmp = 0; iEmp < 50; iEmp++) {
+            cat[iRow][iEmp] = 0;
+        }
+    }
 }
 //// function deletes the employee record (by setting all the values
 //in that column to zero) present in the column index passed to it.
 // x= employee index n is unused
-void Delete (float cat[][50],int n, int x)
+void Delete(float cat[][50], int n, int x)
 {
-   /* int employeeIndex = x;
-    int i=0;
-    for (i=0;i<4;i++)
-        {
-            cat[0][employeeIndex]=0;
-       }*/
+    int employeeIndex = x;
+    int i = 0;
+    for (i = 0; i < 4; i++)
+    {
+        cat[0][employeeIndex] = 0;
+    }
 }
 float paycheck (float cat[][50],int n, int mouse)
 {
@@ -238,23 +241,23 @@ int j=0;
 //http://www.cplusplus.com/reference/cstdio/sscanf/
 //https://stackoverflow.com/questions/10820377/c-format-char-array-like-printf
 void printfp(char text[], int padLength) {
-	printf(text);
-	int len = strlen(text);
-	while (len < padLength) {
-		printf(" ");
-		len++;
-	}
-	printf("string length:  %d", len);
+    printf(text);
+    int len = strlen(text);
+    while (len < padLength) {
+        printf(" ");
+        len++;
+    }
+    printf("string length:  %d", len);
 
 }
 
 void populate(float a[][50]) {
-	for (int i = 0; i < 50; i++) {
-		a[0][i] = i + 1; // Employee number
-		a[1][i] = 30.0 + i/2.0; // Employee hours worked
-		a[2][i] = 8.0 + i; // Employee hourly wage
-		a[3][i] = a[2][i]*(0.04 + (float) i / 100.0); // Employee tax deduction
-	}
+    for (int i = 0; i < 50; i++) {
+        a[0][i] = i + 1; // Employee number
+        a[1][i] = 30.0 + i/2.0; // Employee hours worked
+        a[2][i] = 8.0 + i; // Employee hourly wage
+        a[3][i] = a[2][i]*(0.04 + (float) i / 100.0); // Employee tax deduction
+    }
 }
 
 
