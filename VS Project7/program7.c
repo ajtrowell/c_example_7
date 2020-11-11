@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 /*
 Paul Ruth
 program 7
@@ -29,7 +30,7 @@ char newMenu(struct MenuOption *menuOptionArray);
 
 // Structure definition to streamline menu creation
 struct MenuOption {
-    char button[1];
+    char button[5];
     char message[100];
     void(*optionFunction)(float[]); // employee array
 };
@@ -47,15 +48,15 @@ float a[4][50]={0};
 // The third field fun_menu_option is how we will set which function 
 // will get called when an option is selected.
 struct MenuOption menuOptionArray[20] = { // DEBUG: temporarily set size to 20
-    {'a',"add employee info\n",&menu_addEmployee},
-    {'d',"display employee info\n",&menu_display},
-    {'t',"to display total payroll\n",&menu_totalPayroll},
-    {'s',"display all employee info\n",&record},
-    {'c',"display total number of employees\n",&numEmployees},
-    {'f',"delete employee\n",&menu_deleteEmployee},
-    {'1',NULL,&menu_debugDisplay}, // Hidden option, not listed on menu
-    {'q',NULL,&populate}, // Hidden option, not listed on menu
-    {'z',"exit\n",NULL},
+    {"a","add employee info\n",&menu_addEmployee},
+    {"d","display employee info\n",&menu_display},
+    {"t","to display total payroll\n",&menu_totalPayroll},
+    {"s","display all employee info\n",&record},
+    {"c","display total number of employees\n",&numEmployees},
+    {"f","delete employee\n",&menu_deleteEmployee},
+    {"1",NULL,&menu_debugDisplay}, // Hidden option, not listed on menu
+    {"q",NULL,&populate}, // Hidden option, not listed on menu
+    {"z","exit\n",NULL},
     {NULL,NULL,NULL} // Null end of array indicator
 };
 
@@ -121,16 +122,16 @@ char menuOpt;
 
 char newMenu(struct MenuOption menuArray[]) {
     char menuOpt = NULL;
-    char key = NULL;
+    char *key;     // character array, though I just wanted a character at first.
     char *message; // character array
     int menuIndex = 0;
 
     // Print until NULL button is found
-    while ( menuArray[menuIndex].button != NULL) {
-        if (menuArray[menuIndex].message != NULL) {
+    while ( menuArray[menuIndex].button[0] != NULL) {
+        if (menuArray[menuIndex].message[0] != NULL) {
             key = menuArray[menuIndex].button;
             message = menuArray[menuIndex].message;
-            printf("Select %c or %c to %s", (key), (key), message);
+            printf("Select %c or %c to %s",toupper(key[0]),tolower(key[0]), message);
         }
         menuIndex++;
     }
