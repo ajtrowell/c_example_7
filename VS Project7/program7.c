@@ -17,15 +17,16 @@ void wipe (float cat[][50], int n);
 void Delete (float cat[][50],int n, int x);
 float paycheck (float cat[][50],int n, int mouse);
 void record (float cat[][50]);
-char menu (void);
 void populate(float a[][50]);
-void printfp(char text[], int padLength);
+
+char displayMenuAndReturnOption(struct MenuOption menuArray[]);
+int executeMenuOption(struct MenuOption menuArray[], char employeeArray[][50], char menuOptChar);
+
 void menu_addEmployee(float a[][50]);
 void menu_display(float a[][50]);
 void menu_totalPayroll(float a[][50]);
 void menu_deleteEmployee(float a[][50]);
 void menu_debugDisplay(float a[][50]);
-char newMenu(struct MenuOption *menuOptionArray);
 
 
 // Structure definition to streamline menu creation
@@ -35,92 +36,43 @@ struct MenuOption {
     void(*optionFunction)(float[]); // employee array
 };
 
-
+// Main Function
 int main (void)
 {
-int exitCmd = 1;
-int employeeIndex=0, employeeNumber=0;
-char menuOpt=' ';
-float a[4][50]={0};
+    int continueProgram = 1;
+    int employeeIndex=0, employeeNumber=0;
+    char menuOpt=' ';
+    float employeeArray[4][50]={0};
 
+    // Initialize an array of MenuOption structures to build the menu.
+    // The third field fun_menu_option is how we will set which function 
+    // will get called when an option is selected.
+    struct MenuOption menuOptionArray[20] = { // DEBUG: temporarily set size to 20
+        {'a',"add employee info\n",&menu_addEmployee},
+        {'d',"display employee info\n",&menu_display},
+        {'t',"to display total payroll\n",&menu_totalPayroll},
+        {'s',"display all employee info\n",&record},
+        {'c',"display total number of employees\n",&numEmployees},
+        {'f',"delete employee\n",&menu_deleteEmployee},
+        {'1',"",&menu_debugDisplay}, // Hidden option, not listed on menu
+        {'q',"",&populate}, // Hidden option, not listed on menu
+        {'z',"exit\n",NULL},
+        {NULL,NULL,NULL} // Null end of array indicator
+    };
 
-// Initialize an array of MenuOption structures to build the menu.
-// The third field fun_menu_option is how we will set which function 
-// will get called when an option is selected.
-struct MenuOption menuOptionArray[20] = { // DEBUG: temporarily set size to 20
-    {'a',"add employee info\n",&menu_addEmployee},
-    {'d',"display employee info\n",&menu_display},
-    {'t',"to display total payroll\n",&menu_totalPayroll},
-    {'s',"display all employee info\n",&record},
-    {'c',"display total number of employees\n",&numEmployees},
-    {'f',"delete employee\n",&menu_deleteEmployee},
-    {'1',NULL,&menu_debugDisplay}, // Hidden option, not listed on menu
-    {'q',NULL,&populate}, // Hidden option, not listed on menu
-    {'z',"exit\n",NULL},
-    {NULL,NULL,NULL} // Null end of array indicator
-};
-
-
-do
-{
-    //menuOpt = tolower(menu());
-    menuOpt = newMenu(menuOptionArray);
-    switch (menuOpt)
+    // Menu loop
+    do
     {
-        case 'a': // Add
-            menu_addEmployee(a);
-        break;
-        case 'd': // Display
-            menu_display(a);
-        break;
-        case 't': // Show total payroll
-            menu_totalPayroll(a);
-        break;
-        case 's':
-            record(a);
-        break;
-        case 'c':
-            numEmployees(a);
-        break;
-        case 'f':
-            menu_deleteEmployee(a);
-        break;
-        case 'z':
-            printf("Better cut those checks have a nice day!");
-            exitCmd = 0;
-        break;
-        case '1':
-            menu_debugDisplay(a);
-            break;
-        case 'q': // Hidden option, fill in the employee table
-            populate(a);
-        break;
-    default:
-        printf("Please enter valid selection\n");
-        }
+        menuOpt = displayMenuAndReturnOption(menuOptionArray);
+        continueProgram = executeMenuOption(menuOptionArray, employeeArray, menuOpt);
+    } while(continueProgram ==1);
 
-}while(exitCmd ==1);
+    return 0;
+} // end of main()
 
 
-return 0;
-}
-char menu (void)
-{
-char menuOpt;
-
-    printf("Select A or a to add employee info\n");
-    printf("Select D or d to display employee info\n");
-    printf("Select T or t to display total payroll\n");
-    printf("Select S or s to display all employee info\n");
-    printf("Select C or c to display total number of employees\n");
-    printf("Select F or f to delete employee\n");
-    printf("Select Z or z to exit\n");
-
-    scanf(" %c", &menuOpt);
-    return menuOpt;
-}
-
-char newMenu(struct MenuOption menuArray[]) {
+// Display menu and return option selection character
+char displayMenuAndReturnOption(struct MenuOption menuArray[]) {
     char menuOpt = NULL;
     char key;     // character array, though I just wanted a character at first.
     char *message; // character array
@@ -137,6 +89,36 @@ char newMenu(struct MenuOption menuArray[]) {
     scanf(" %c", &menuOpt);
     return tolower(menuOpt);
 }
+
+// Given menu option selection character, execute appropriate function if defined, 
+// give message if option not defined.
+// return 1 if program should continue executing, 0 if it should halt.
+int executeMenuOption(struct MenuOption menuArray[], char employeeArray[][50], char menuOptChar) {
+    int continueProgram = 1;
+    int optionIndex = 0;
+    while (1) {
+        if (menuArray[optionIndex].button == NULL) {
+            printf("Please enter valid selection\n");
+            break;
+        }
+        else if (tolower(menuOptChar) == tolower(menuArray[optionIndex].button)) {
+            //Found matching menuOption.  Execute Accordingly:
+            if (menuArray[optionIndex].optionFunction == NULL) {
+                continueProgram = 0;
+                break;
+            }
+            else {
+                // Run menu option function
+                menuArray[optionIndex].optionFunction(employeeArray);
+                break;
+            }
+        }
+        // keep searching for matching menu option until we hit button == NULL
+        optionIndex++;
+    }
+    return continueProgram;
+}
+
 
 
 int possible(float cat[][50], int n)
@@ -180,6 +162,8 @@ int search(float cat[][50],int n, int mouse)
     }
     return employeeIndex;
 }
+
+
 int numEmployees (float cat[][50])
 {
     int j=0, k=0;
@@ -202,6 +186,8 @@ void wipe (float cat[][50], int n)
         }
     }
 }
+
+
 //// function deletes the employee record (by setting all the values
 //in that column to zero) present in the column index passed to it.
 // x= employee index n is unused
@@ -214,18 +200,32 @@ void Delete(float cat[][50], int n, int x)
         cat[0][employeeIndex] = 0;
     }
 }
+
+
 // cat is employeeArray
 // n and mouse are unused
 float paycheck (float cat[][50],int n, int mouse)
 {
-    int j=0;
     float sum =0;
-    for(j=0; j<50; j++)
+    for(int j=0; j<50; j++)
     {
         sum = sum + (cat[1][j]*cat[2][j]-cat[1][j]*cat[2][j]*(cat[3][j])/100);
     }
     return sum;
 }
+
+// Print one record by array index
+void printFormattedRecord(float employeeArray[][50], int i) {
+    printf("Employee number                          : %8.0f\n",employeeArray[0][i]);
+    printf("Hours worked                             : %8.2f\n",employeeArray[1][i]);
+    printf("Employee pay rate                        : %8.2f\n",employeeArray[2][i]);
+    printf("Total earned                             : %8.2f\n",employeeArray[1][i]*employeeArray[2][i]);
+    printf("Tax deduction of %6.2f%% for a total of  : %8.2f\n",employeeArray[3][i],employeeArray[1][i]*employeeArray[2][i]*(employeeArray[3][i])/100);
+    printf("Pay check amount                         : %8.2f\n",employeeArray[1][i]*employeeArray[2][i]-employeeArray[1][i]*employeeArray[2][i]*(employeeArray[3][i])/100);
+    printf("---------------------------------------------------\n");
+}
+
+
 // Show all records
 // cat is input array
 // n and mouse do nothing
@@ -235,18 +235,12 @@ void record (float cat[][50])
     for (j=0;j<50;j++)
     {
         if((int)cat[0][j] == 0)
-            break;
-
-        printf("Employee number                          : %8.0f\n",cat[0][j]);
-        printf("Hours worked                             : %8.2f\n",cat[1][j]);
-        printf("Employee pay rate                        : %8.2f\n",cat[2][j]);
-        printf("Total earned                             : %8.2f\n",cat[1][j]*cat[2][j]);
-        printf("Tax deduction of %6.2f%% for a total of  : %8.2f\n",cat[3][j],cat[1][j]*cat[2][j]*(cat[3][j])/100);
-        printf("Pay check amount                         : %8.2f\n",cat[1][j]*cat[2][j]-cat[1][j]*cat[2][j]*(cat[3][j])/100);
-        printf("---------------------------------------------------\n");
+            continue;
+        printFormattedRecord(cat, j);
     }
 
 }
+
 
 void populate(float a[][50]) {
     for (int i = 0; i < 50; i++) {
@@ -256,8 +250,6 @@ void populate(float a[][50]) {
         a[3][i] = a[2][i]*(0.04 + (float) i / 100.0); // Employee tax deduction
     }
 }
-
-
 
 
 void menu_addEmployee(float a[][50]) {
@@ -285,12 +277,7 @@ void menu_display(float a[][50]) {
     int iEmployee = search(a,4,employeeNum);
     if (iEmployee != 1000)
     {
-        printf("Employee number                        : %.2f\n",a[0][iEmployee]);
-        printf("Hours worked                           : %.2f\n",a[1][iEmployee]);
-        printf("Employee pay rate                      : %.2f\n",a[2][iEmployee]);
-        printf("Total earned                           : %.2f\n",a[1][iEmployee]*a[2][iEmployee]);
-        printf("Tax deduction of %.2f%% for a total of : %.2f\n",a[3][iEmployee],a[1][iEmployee]*a[2][iEmployee]*(a[3][iEmployee])/100);
-        printf("Pay check amount                      : %.2f\n",a[1][iEmployee]*a[2][iEmployee]-a[1][iEmployee]*a[2][iEmployee]*(a[3][iEmployee])/100);
+        printFormattedRecord(a, iEmployee);
     }else
         printf("No such employee");
 }
