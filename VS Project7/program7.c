@@ -48,15 +48,15 @@ int main (void)
     // The third field fun_menu_option is how we will set which function 
     // will get called when an option is selected.
     struct MenuOption menuOptionArray[20] = { // DEBUG: temporarily set size to 20
-        {'a',"add employee info\n",&menu_addEmployee},
-        {'d',"display employee info\n",&menu_display},
-        {'t',"to display total payroll\n",&menu_totalPayroll},
-        {'s',"display all employee info\n",&record},
-        {'c',"display total number of employees\n",&numEmployees},
-        {'f',"delete employee\n",&menu_deleteEmployee},
+        {'a',"add employee info",&menu_addEmployee},
+        {'d',"display employee info",&menu_display},
+        {'t',"to display total payroll",&menu_totalPayroll},
+        {'s',"display all employee info",&record},
+        {'c',"display total number of employees",&numEmployees},
+        {'f',"delete employee",&menu_deleteEmployee},
         {'1',"",&menu_debugDisplay}, // Hidden option, not listed on menu
         {'q',"",&populate}, // Hidden option, not listed on menu
-        {'z',"exit\n",NULL},
+        {'z',"exit",NULL},
         {NULL,NULL,NULL} // Null end of array indicator
     };
 
@@ -82,7 +82,7 @@ char displayMenuAndReturnOption(struct MenuOption menuArray[]) {
         if (menuArray[menuIndex].message[0] != NULL) {
             key =  menuArray[menuIndex].button;
             message = menuArray[menuIndex].message;
-            printf("Select %c or %c to %s",toupper(key),tolower(key), message);
+            printf("Select %c or %c to %s\n",toupper(key),tolower(key), message);
         }
         menuIndex++;
     }
@@ -170,7 +170,7 @@ int numEmployees (float cat[][50])
     for(j=0; j<50; j++)
     {
         if (cat[0][j] == 0)
-            break;
+            continue;
         else
             k++;
     }
@@ -241,7 +241,7 @@ void record (float cat[][50])
 
 }
 
-
+// Populate 50 fake employees to aid testing
 void populate(float a[][50]) {
     for (int i = 0; i < 50; i++) {
         a[0][i] = i + 1; // Employee number
