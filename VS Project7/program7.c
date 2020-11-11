@@ -24,6 +24,16 @@ void menu_display(float a[][50]);
 void menu_totalPayroll(float a[][50]);
 void menu_deleteEmployee(float a[][50]);
 void menu_debugDisplay(float a[][50]);
+char newMenu(struct MenuOption *menuOptionArray);
+
+
+// Structure definition to streamline menu creation
+struct MenuOption {
+    char button[1];
+    char message[100];
+    void(*optionFunction)(float[]); // employee array
+};
+
 
 int main (void)
 {
@@ -33,12 +43,10 @@ char menuOpt=' ';
 float a[4][50]={0};
 
 
-struct MenuOption {
-    char key[1];
-    char message[100];
-    void(*fun_menu_option)(float[]); // employee array
-};
-struct MenuOption menuOptionArray[] = {
+// Initialize an array of MenuOption structures to build the menu.
+// The third field fun_menu_option is how we will set which function 
+// will get called when an option is selected.
+struct MenuOption menuOptionArray[20] = { // DEBUG: temporarily set size to 20
     {'a',"add employee info\n",&menu_addEmployee},
     {'d',"display employee info\n",&menu_display},
     {'t',"to display total payroll\n",&menu_totalPayroll},
@@ -54,7 +62,8 @@ struct MenuOption menuOptionArray[] = {
 
 do
 {
-    menuOpt = tolower(menu());
+    //menuOpt = tolower(menu());
+    menuOpt = newMenu(menuOptionArray);
     switch (menuOpt)
     {
         case 'a': // Add
@@ -108,6 +117,26 @@ char menuOpt;
 
     scanf(" %c", &menuOpt);
     return menuOpt;
+}
+
+char newMenu(struct MenuOption menuArray[]) {
+    char menuOpt = NULL;
+    char key = NULL;
+    char *message; // character array
+    int menuIndex = 0;
+
+    // Print until NULL button is found
+    while ( menuArray[menuIndex].button != NULL) {
+        if (menuArray[menuIndex].message != NULL) {
+            key = menuArray[menuIndex].button;
+            message = menuArray[menuIndex].message;
+            printf("Select %c or %c to %s", (key), (key), message);
+        }
+        menuIndex++;
+    }
+
+    scanf(" %c", &menuOpt);
+    return tolower(menuOpt);
 }
 
 
